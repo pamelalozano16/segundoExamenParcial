@@ -39,7 +39,7 @@ public class RandW {
             //Direction de un enemy de la lista
             int directionEnemys = g.enemys.get(0).getDirection();
             
-            info += ("" + g.lives + "/" + 0 + "/" + g.player.getX() + "/" + g.player.getY());
+            info += ("" + g.lives + "/" + g.score + "/" + g.player.getX() + "/" + g.player.getY());
             info += ("/" + directionEnemys);
             
             for (Enemy enemy : g.enemys) {
@@ -73,6 +73,7 @@ public class RandW {
             line = reader.readLine();
             datos = line.split("/");
             g.lives = Integer.parseInt(datos[0]); //load Vidas
+            g.score = Integer.parseInt(datos[2]); //load Score
             g.player.setX(Integer.parseInt(datos[2]));//load player x
             g.player.setY(Integer.parseInt(datos[3]));//load player y
             direction = Integer.parseInt(datos[4]);//load direccion

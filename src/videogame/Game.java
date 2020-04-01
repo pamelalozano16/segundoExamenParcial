@@ -36,6 +36,7 @@ public class Game implements Runnable {
     public LinkedList<Shot> shots;
     private int contadorPerder;
     public int lives;
+    public int score;
     private boolean pause;
     public int tamBuenos;
     public int tamMalos;
@@ -49,6 +50,7 @@ public class Game implements Runnable {
         keyManager = new KeyManager();
         contadorPerder = 0;
         lives = 3;
+        score=0;
     }
 
     /**
@@ -82,10 +84,6 @@ public class Game implements Runnable {
         Assets.win.play();
     }
 
-    public void gameOver() {
-        Assets.changeBackground();
-        Assets.end.play();
-    }
 
     /**
      * initializing the display window of the game
@@ -98,12 +96,14 @@ public class Game implements Runnable {
         bombs = new LinkedList<Bomb>();
         shots = new LinkedList<Shot>();
      //   tamBuenos = (int) (Math.random() * 3 + 8); //b-a+1 NUMERO DE ENEMIGOS
+     
         tamMalos = 24; //NUMERO DE ENEMIGOS
         player = new Player((getWidth() - 100) / 2, 280, 1, 15, 10, this); //Player posicionen medio
         RW = new RandW(this);//Pasarle el game a read y write
 
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 6; j++) {
+                //Se agregan los enemigos con las coordenadas de un cuadro 6x4
                 Enemy alien = new Enemy(150 + 18 * j, 5 + 18 * i, 1, 15, 15, this);
                 enemys.add(alien);
             }
@@ -176,10 +176,10 @@ public class Game implements Runnable {
                 for (Shot shot : shots) {
                     shot.render(g);
                 }
-                /*for (Good pacman : pacmans) {
-                pacman.render(g);
-            }*/
+
                 g.setColor(Color.white);
+                g.drawString("Score: " + Integer.toString(score), getWidth() - 80,
+                    20); //Pinta score                
                 g.drawString("Lives: " + Integer.toString(lives), getWidth() - 80,
                         45);//Pinta lives
                 g.setColor(Color.green);
@@ -215,28 +215,38 @@ public class Game implements Runnable {
 
     public void bomb() { //Bombas de los enemigos
         if(!pause){
-                //Dos bombas al mismo tiempo
+        //Dos bombas al mismo tiempo
+        
         //Dos numeros random del 1 al 24
         int rand = (int) (Math.random() * 23 + 1);
-        int rand2 = (int) (Math.random() * 23 + 1);
+     //   int rand2 = (int) (Math.random() * 23 + 1);
 
         //  Enemigos Random que disparan
         Enemy enemy = enemys.get(rand);
-        Enemy enemy2 = enemys.get(rand2);
+    //    Enemy enemy2 = enemys.get(rand2);
 
         //Bombas 
         Bomb bomb = new Bomb(enemy.getX(), enemy.getY(), 1, 3, 5, this);
-        Bomb bomb2 = new Bomb(enemy2.getX(), enemy2.getY(), 1, 3, 5, this);
+    //    Bomb bomb2 = new Bomb(enemy2.getX(), enemy2.getY(), 1, 3, 5, this);
 
         //Se añaden dos bombas
-        bombs.addLast(bomb);
-        bombs.addLast(bomb2);
+        bombs.add(bomb);
+     //   bombs.addLast(bomb2);
         }
     }
 
     public void shoot() {//Disparo del player
-        Shot shot = new Shot(player.getX() + 6, player.getY(), 1, 3, 5, this);
-        shots.add(shot);
+        Shot last=null;
+        if(shots.size()!=0){
+        last = shots.get(shots.size()-1);  
+        } else{
+        Shot shot = new Shot(player.getX() + 6, player.getY(), 1, 3, 7, this);
+        shots.add(shot); 
+        }
+        if(last!=null&&!last.isVisible()){
+        Shot shot = new Shot(player.getX() + 6, player.getY(), 1, 3, 7, this);
+        shots.addLast(shot); 
+        }
     }
 
     public KeyManager getKeyManager() {
@@ -247,15 +257,8 @@ public class Game implements Runnable {
         if (lives > 0) { //Si se acaba que todo se deje de mover
             keyManager.tick();
             this.pause = keyManager.pause;
-            /*   if (pause) {
-                    System.out.println("pausar");
-                } else {
-
-                    System.out.println("despausar");
-                }*/
 
             if (keyManager.guardar) {
-                this.bomb();
                 System.out.println("guardar");
                 RW.Save("./load.txt");
             }
@@ -275,18 +278,25 @@ public class Game implements Runnable {
 
                 for (Bomb bomb : bombs) {
                     bomb.tick();
+                    //Si le cae una bomba al player
                     if (player.colission(bomb) && bomb.isVisible()) {
+                        //La bomba ya no es visible
                         bomb.die();
+                        //Vida menos
                         lives--;
                     }
                 }
 
                 for (Shot shot : shots) {
                     for (Enemy enemy : enemys) {
+                        //Checa si el shot choco con algun enemigo
+                        //Si estan visibles siguen en el juego
                         if (shot.colission(enemy) && shot.isVisible() && enemy.isVisible()) {
-                            //Si estan visibles siguen en el juego
+                            //Si chocan ya no se pintan
                             enemy.die();
                             shot.die();
+                            //Se suma score
+                            score+=5;
                         }
                     }
                     shot.tick();

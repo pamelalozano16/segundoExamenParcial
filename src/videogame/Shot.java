@@ -56,7 +56,8 @@ public class Shot extends Item {
 
     public void tick() {
 
-        setY(getY()-2);
+        setY(getY()-4);
+        //Disparos hacia arriba
         
         if(getY()==0){
             this.die();
