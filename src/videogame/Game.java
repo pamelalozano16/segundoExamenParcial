@@ -7,6 +7,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferStrategy;
 import static java.lang.System.load;
+import java.util.Iterator;
 import java.util.LinkedList;
 
 /**
@@ -101,7 +102,6 @@ public class Game implements Runnable {
         
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 6; j++) {
-
                 Enemy alien = new Enemy(150 + 18 * j,5 + 18 * i,-1, 15,15,this);
                 enemys.add(alien);
             }
@@ -193,9 +193,21 @@ public class Game implements Runnable {
     }
     
     public void border(int direction){
+        /*if(direction==1){
+            Enemy enemy=enemys.get(0);
+            enemy.setX(1);
+        }*/
         for(Enemy enemy : enemys){
-            enemy.setY(enemy.getY()+15);
+           enemy.setY(enemy.getY()+15);
+           //Bajan 15 px
+          if(enemy.getDirection()!=direction){
             enemy.setDirection(direction);
+            //Cambia de dirección
+            enemy.setX(enemy.getX()+direction);
+            //Para que no se corran los de la esquina
+                                        
+          }
+
         }
     }
 

@@ -54,7 +54,7 @@ public class Enemy extends Item {
 
     public void tick() {
 
-        setX(getX()+direction);
+
         //this.animationLeft.tick();
 
         
@@ -67,14 +67,17 @@ public class Enemy extends Item {
            this.setY(this.getY() + azar);
         }*/
         if (this.getX() <= 0) {   //Esquina izquierda
-            setX(0);
+           // setX(0);
+           //this.direction=1;
             game.border(1);
         }
         if (this.getX() >= game.getWidth()-12) {   //Esquina izquierda
-            setX(game.getWidth()-12);
+           this.direction=-1;
             game.border(-1);
             
         }
+        
+        setX(getX()+direction);
 
     }
 

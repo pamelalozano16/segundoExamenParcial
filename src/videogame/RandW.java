@@ -42,10 +42,10 @@ public class RandW {
             for (Enemy enemy : g.enemys) {
                 info += ("/" + enemy.getX() + "/" + enemy.getY());
             }
-            info += ("/" + g.tamBuenos);
+            /*info += ("/" + g.tamBuenos);
             for (Good good : g.pacmans) {
                 info += ("/" + good.getX() + "/" + good.getY());
-            }
+            }*/
             writer.println(info);
             writer.close();
         } catch (IOException ioe) {
@@ -69,14 +69,14 @@ public class RandW {
             g.player.setY(Integer.parseInt(datos[3]));//load player y
             g.tamMalos = Integer.parseInt(datos[4]);//load tamaño de malos
 
-            for (i = 5, j = 1; j <= g.tamMalos; i += 2, j++) { //Enemigos
+            for (i = 5, j = 1; j <= 24; i += 2, j++) { //Enemigos
                 int x = Integer.parseInt(datos[i]);//load enemy x
                 int y = Integer.parseInt(datos[i + 1]);//load enemy y
-                Enemy enemy = new Enemy(x, y, 1, 50, 50, g);
+                Enemy enemy = new Enemy(x, y, 1, 15, 15, g);
                 g.enemys.add(enemy); //Se agrega a la lista
             }
 
-            g.tamBuenos = Integer.parseInt(datos[i]);
+           /* g.tamBuenos = Integer.parseInt(datos[i]);
             i++;
             for (j = 1; j <= g.tamBuenos; i += 2, j++) { //Monedas
                 int x = Integer.parseInt(datos[i]);//load moneda x
@@ -84,9 +84,9 @@ public class RandW {
                 Good good = new Good(x, y, 1, 35, 50, g);
                 g.pacmans.add(good); //Se agrega a la lista
             }
-
+*/
             System.out.println("Se leyo  vidas = " + g.lives + " y score = " + g.score + " tamMalos = "
-                    + g.tamMalos + " tamBuenos = " + g.tamBuenos);
+                    + g.tamMalos );
             reader.close();
         } catch (IOException e) {
             System.out.println("File Not found CALL 911");
