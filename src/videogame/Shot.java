@@ -56,11 +56,14 @@ public class Shot extends Item {
 
     public void tick() {
 
-        setY(getY()+1);
+        setY(getY()-2);
         
-        if(getY()==290){
+        if(getY()==0){
             this.die();
         }
+    }
+    public boolean isVisible(){
+        return visible;
     }
     
     public void die(){

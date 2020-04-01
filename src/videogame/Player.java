@@ -69,6 +69,10 @@ public class Player extends Item {
             setY(getY() + 1);
             animation = "down";
         } */
+        if(game.getKeyManager().space){
+            game.shoot();
+            game.getKeyManager().releaseSpace();
+        }
         if (game.getKeyManager().left) {
             setX(getX() - 2);
             animation = "left";

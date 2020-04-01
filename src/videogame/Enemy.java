@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 package videogame;
+
 import java.awt.Graphics;
 
 /**
@@ -17,7 +18,8 @@ public class Enemy extends Item {
     private int height;
     private Game game;
     private int moving;
-   // private Animation animationLeft;
+    private boolean visible;
+    // private Animation animationLeft;
 
     public Enemy(int x, int y, int direction, int width, int height, Game game) {
         super(x, y, width, height);
@@ -25,7 +27,8 @@ public class Enemy extends Item {
         this.width = width;
         this.height = height;
         this.game = game;
-       // this.animationLeft = new Animation(Assets.enemyLeft, 100);
+        this.visible = true;
+        // this.animationLeft = new Animation(Assets.enemyLeft, 100);
     }
 
     public int getDirection() {
@@ -54,38 +57,34 @@ public class Enemy extends Item {
 
     public void tick() {
 
-
-        //this.animationLeft.tick();
-
-        
-
-        /* if(this.getY() >0){
-            this.setY(this.getY() -azar);
-        } 
-        else
-        {
-           this.setY(this.getY() + azar);
-        }*/
         if (this.getX() <= 0) {   //Esquina izquierda
-           // setX(0);
-           //this.direction=1;
+            // setX(0);
+            //this.direction=1;
             game.border(1);
         }
-        if (this.getX() >= game.getWidth()-12) {   //Esquina izquierda
-           this.direction=-1;
+        if (this.getX() >= game.getWidth() - 12) {   //Esquina izquierda
+            this.direction = -1;
             game.border(-1);
-            
+
         }
-        
-        setX(getX()+direction);
+
+        setX(getX() + direction);
 
     }
+    public boolean isVisible(){
+        return visible;
+    }
     
+    public void die() {
+        this.visible = false;
+    }
 
     @Override
     public void render(Graphics g) {
         //  g.drawImage(Assets.enemy, getX(), getY(), getWidth(), getHeight(), null);
-        g.drawImage(Assets.enemy, getX(), getY(), getWidth(), getHeight(), null);
+        if (visible) {
+            g.drawImage(Assets.enemy, getX(), getY(), getWidth(), getHeight(), null);
+        }
     }
 
 }

@@ -16,7 +16,7 @@ public class Bomb extends Item {
     private int width;
     private int height;
     private Game game;
-    public boolean visible;
+    private boolean visible;
    //Cuando choque dejaran de ser visibles
 
     public Bomb(int x, int y, int direction, int width, int height, Game game) {
@@ -60,6 +60,10 @@ public class Bomb extends Item {
         if(getY()==285){
             this.die();
         }
+    }
+    
+    public boolean isVisible(){
+        return visible;
     }
     
     public void die(){

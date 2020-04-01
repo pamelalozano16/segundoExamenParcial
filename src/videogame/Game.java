@@ -3,6 +3,7 @@
  * Javier Sanchez A00517066
  */
 package videogame;
+
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferStrategy;
@@ -32,6 +33,7 @@ public class Game implements Runnable {
     public LinkedList<Enemy> enemys; //LISTA = MALOS
     public LinkedList<Good> pacmans;// PACMANS = BUENOS
     public LinkedList<Bomb> bombs;
+    public LinkedList<Shot> shots;
     private int contadorPerder;
     public int lives;
     public int score;
@@ -97,37 +99,28 @@ public class Game implements Runnable {
         enemys = new LinkedList<Enemy>();
         pacmans = new LinkedList<Good>();
         bombs = new LinkedList<Bomb>();
+        shots = new LinkedList<Shot>();
         tamBuenos = (int) (Math.random() * 3 + 8); //b-a+1 NUMERO DE ENEMIGOS
         tamMalos = (int) (Math.random() * 6 + 10); //NUMERO DE PACMANS
         System.out.println("Enemys: " + tamMalos);
         System.out.println("Buenos: " + tamBuenos);
         player = new Player((getWidth() - 100) / 2, 280, 1, 15, 10, this); //Player posicionen medio
         RW = new RandW(this);//Pasarle el game a read y write
-        
+
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 6; j++) {
-                Enemy alien = new Enemy(150 + 18 * j,5 + 18 * i,-1, 15,15,this);
+                Enemy alien = new Enemy(150 + 18 * j, 5 + 18 * i, -1, 15, 15, this);
                 enemys.add(alien);
             }
         }
-      /*  for (int i = 1; i <= tamMalos; i++) { //CREACION DE ENEMIGOS EN EL EXTREMO IZQUIERDO
-            Enemy enemy = new Enemy(getWidth() + 50, (int) (Math.random() * getHeight()), 1, 12, 12, this);
-            lista.add(enemy);
-
-        }
-        for (int i = 1; i <= tamBuenos; i++) { //CREACION DE ENEMIGOS EN EL EXTREMO DERECHO
-            Good pacman = new Good(-50, (int) (Math.random() * getHeight()), 1, 12, 12, this);
-            pacmans.add(pacman);
-
-        }*/
 
         display.getJframe().addKeyListener(keyManager);
         System.out.println("Vidas: " + lives);
-        
+
         //Timer para que cada 0.6s se disparen dos bombas
         Timer timer = new Timer();
         timer.schedule(new BombTask(this), 0, 600);
-    
+
     }
 
     @Override
@@ -186,6 +179,9 @@ public class Game implements Runnable {
             for (Bomb bomb : bombs) {
                 bomb.render(g);
             }
+            for (Shot shot : shots) {
+                shot.render(g);
+            }
             /*for (Good pacman : pacmans) {
                 pacman.render(g);
             }*/
@@ -196,51 +192,55 @@ public class Game implements Runnable {
                     45);//Pinta lives
             g.setColor(Color.green);
             g.drawLine(0, 290, getWidth(), 290);
-             
+
             bs.show();
             g.dispose();
 
         }
 
     }
-    
-    public void border(int direction){
+
+    public void border(int direction) {
         /*if(direction==1){
             Enemy enemy=enemys.get(0);
             enemy.setX(1);
         }*/
-        for(Enemy enemy : enemys){
-           enemy.setY(enemy.getY()+15);
-           //Bajan 15 px
-          if(enemy.getDirection()!=direction){
-            enemy.setDirection(direction);
-            //Cambia de dirección
-            enemy.setX(enemy.getX()+direction);
-            //Para que no se corran los de la esquina
-                                        
-          }
+        for (Enemy enemy : enemys) {
+            enemy.setY(enemy.getY() + 15);
+            //Bajan 15 px
+            if (enemy.getDirection() != direction) {
+                enemy.setDirection(direction);
+                //Cambia de dirección
+                enemy.setX(enemy.getX() + direction);
+                //Para que no se corran los de la esquina
+
+            }
 
         }
     }
-    
-    public void bomb(){
+
+    public void bomb() { //Bombas de los enemigos
         //Dos bombas al mismo tiempo
         //Dos numeros random del 1 al 24
         int rand = (int) (Math.random() * 23 + 1);
         int rand2 = (int) (Math.random() * 23 + 1);
 
-      //  Enemigos Random que disparan
+        //  Enemigos Random que disparan
         Enemy enemy = enemys.get(rand);
         Enemy enemy2 = enemys.get(rand2);
 
         //Bombas 
-        Bomb bomb = new Bomb(enemy.getX(),enemy.getY(),1, 3,5,this);
-        Bomb bomb2 = new Bomb(enemy2.getX(),enemy2.getY(),1, 3,5,this);
-        
+        Bomb bomb = new Bomb(enemy.getX(), enemy.getY(), 1, 3, 5, this);
+        Bomb bomb2 = new Bomb(enemy2.getX(), enemy2.getY(), 1, 3, 5, this);
+
         //Se añaden dos bombas
         bombs.add(bomb);
-        bombs.add(bomb2);
+        bombs.addLast(bomb2);
+    }
 
+    public void shoot() {//Disparo del player
+        Shot shot = new Shot(player.getX() + 6, player.getY(), 1, 3, 5, this);
+        shots.add(shot);
     }
 
     public KeyManager getKeyManager() {
@@ -273,41 +273,27 @@ public class Game implements Runnable {
             if (!pause) { //Si hay pausa deja de tickear
                 player.tick();
 
-               for (Enemy enemy : enemys) {
+                for (Enemy enemy : enemys) {
                     enemy.tick();
-                   /* if (player.colission(enemy)) {
-                        contadorPerder += 1; //Contador de veces que toca enemigo
-                        if (contadorPerder >= 5) {
-                            contadorPerder = 0;
-                            beep();
-                            lives -= 1; //5 veces resta vida
+                }
 
-                            System.out.println("Perdio");
-                        }
-                        //player.setX(0);
-                        //player.setY(getHeight()-100);
-                        enemy.setX(getWidth() - 50); //Regresa al enemigo al otro extremo y a random height
-                        enemy.setY((int) (Math.random() * getHeight()));
-                    }*/
-                }
-                /*for (Good pacman : pacmans) {
-                    pacman.tick(); //Tickea cada pacman de la lista
-                    if (player.colission(pacman)) {
-                        //player.setX(0);
-                        //player.setY(getHeight()-100);
-                        win(); //Sonido de score
-                        score += 5; //Suma score
-                        pacman.setX(getWidth() - 50); //Regresa a los pacman al otro extremo y random height
-                        pacman.setY((int) (Math.random() * getHeight()));
+                for (Bomb bomb : bombs) {
+                    bomb.tick();
+                    if (player.colission(bomb)&&bomb.isVisible()) {
+                        bomb.die();
                     }
-                }*/
-            for (Bomb bomb : bombs) {
-                bomb.tick();
-                if (player.colission(bomb)) {
-                    bomb.visible=false;
-                    
                 }
-            }
+
+                for (Shot shot : shots) {
+                for (Enemy enemy : enemys) {
+                   if(shot.colission(enemy)&&shot.isVisible()&&enemy.isVisible()){
+                       //Si estan visibles siguen en el juego
+                       enemy.die();
+                       shot.die();
+                   }
+                }
+                    shot.tick();
+                }
             }
 
         }

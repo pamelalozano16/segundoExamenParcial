@@ -14,6 +14,7 @@ public class KeyManager implements KeyListener {
     public boolean left;    // flag to move left the player
     public boolean right;   // flag to move right the player
     public boolean pause;
+    public boolean space;
     public boolean guardar;
     public boolean load;
 
@@ -36,6 +37,10 @@ public class KeyManager implements KeyListener {
     public void releasePause() { //Pausa no tiene release, se renuda cuando le vuelve a dar click
         keys[80] = false;
     }
+    
+   public void releaseSpace() { //Pausa no tiene release, se renuda cuando le vuelve a dar click
+        keys[KeyEvent.VK_SPACE] = false;
+    }
 
     @Override
     public void keyPressed(KeyEvent e) {
@@ -44,6 +49,7 @@ public class KeyManager implements KeyListener {
         if (pause && (e.getKeyCode() == 80)) { //Que se renude si le da click a p
             releasePause();
         }
+
         // System.out.println(e.getKeyCode());
     }
 
@@ -63,6 +69,7 @@ public class KeyManager implements KeyListener {
         down = keys[KeyEvent.VK_DOWN];
         left = keys[KeyEvent.VK_LEFT];
         right = keys[KeyEvent.VK_RIGHT];
+        space = keys[KeyEvent.VK_SPACE];
         pause = keys[80];
         guardar = keys[71];
         load = keys[67];
