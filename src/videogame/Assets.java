@@ -45,6 +45,7 @@ public class Assets {
         enemy= ImageLoader.loadImage("/images/alien.png");
         shot= ImageLoader.loadImage("/images/shot.png");
         bomb= ImageLoader.loadImage("/images/bomb.png");
+        gameOver= ImageLoader.loadImage("/images/game-over.png");
        /* playerSprites = ImageLoader.loadImage("/images/player.png");*/
 
         //PLAYER
@@ -89,7 +90,6 @@ public class Assets {
     }
 
     public static void changeBackground() { //Game over sobre todos los personajes 
-        background = ImageLoader.loadImage("/images/game-over.png");
         playerSprites = null;
         goodSprites = null;
         enemySprites = null;

@@ -37,10 +37,15 @@ public class RandW {
         try {
             String info = ""; //Aqui se va guardando la informacion
             PrintWriter writer = new PrintWriter(new FileWriter(fileName));
-            info += ("" + g.lives + "/" + g.score + "/" + g.player.getX() + "/" + g.player.getY());
+            info += ("" + g.lives + "/" + 0 + "/" + g.player.getX() + "/" + g.player.getY());
             info += ("/" + g.tamMalos);
             for (Enemy enemy : g.enemys) {
+                int visible=0;
+                if(enemy.isVisible()){
+                    visible=1;
+                }
                 info += ("/" + enemy.getX() + "/" + enemy.getY());
+                info += ("/"+visible);
             }
             /*info += ("/" + g.tamBuenos);
             for (Good good : g.pacmans) {
@@ -64,15 +69,18 @@ public class RandW {
             line = reader.readLine();
             datos = line.split("/");
             g.lives = Integer.parseInt(datos[0]); //load Vidas
-            g.score = Integer.parseInt(datos[1]);//load score
             g.player.setX(Integer.parseInt(datos[2]));//load player x
             g.player.setY(Integer.parseInt(datos[3]));//load player y
             g.tamMalos = Integer.parseInt(datos[4]);//load tamaño de malos
 
-            for (i = 5, j = 1; j <= 24; i += 2, j++) { //Enemigos
+            for (i = 5, j = 1; j <= 24; i += 3, j++) { //Enemigos
                 int x = Integer.parseInt(datos[i]);//load enemy x
                 int y = Integer.parseInt(datos[i + 1]);//load enemy y
+                int visible = Integer.parseInt(datos[i + 2]);
                 Enemy enemy = new Enemy(x, y, 1, 15, 15, g);
+                if(visible==0){
+                enemy.die();
+                }
                 g.enemys.add(enemy); //Se agrega a la lista
             }
 
@@ -85,7 +93,7 @@ public class RandW {
                 g.pacmans.add(good); //Se agrega a la lista
             }
 */
-            System.out.println("Se leyo  vidas = " + g.lives + " y score = " + g.score + " tamMalos = "
+            System.out.println("Se leyo  vidas = " + g.lives + " tamMalos = "
                     + g.tamMalos );
             reader.close();
         } catch (IOException e) {

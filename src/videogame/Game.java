@@ -36,7 +36,6 @@ public class Game implements Runnable {
     public LinkedList<Shot> shots;
     private int contadorPerder;
     public int lives;
-    public int score;
     private boolean pause;
     public int tamBuenos;
     public int tamMalos;
@@ -49,9 +48,7 @@ public class Game implements Runnable {
         running = false;
         keyManager = new KeyManager();
         contadorPerder = 0;
-        int vidas = (int) (Math.random() * 3 + 3);
-        lives = vidas;
-        score = 0;
+        lives = 3;
     }
 
     /**
@@ -109,7 +106,7 @@ public class Game implements Runnable {
 
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 6; j++) {
-                Enemy alien = new Enemy(150 + 18 * j, 5 + 18 * i, -1, 15, 15, this);
+                Enemy alien = new Enemy(150 + 18 * j, 5 + 18 * i, 1, 15, 15, this);
                 enemys.add(alien);
             }
         }
@@ -166,32 +163,32 @@ public class Game implements Runnable {
         if (bs == null) {
             display.getCanvas().createBufferStrategy(3);
         } else {
-
-            if (lives <= 0) { //Que se pinte el game over
-                gameOver();
-            }
+            //Que se pinte el game over
             g = bs.getDrawGraphics();
             g.drawImage(Assets.background, 0, 0, width, height, null);
-            player.render(g);
-            for (Enemy enemy : enemys) {
-                enemy.render(g);
-            }
-            for (Bomb bomb : bombs) {
-                bomb.render(g);
-            }
-            for (Shot shot : shots) {
-                shot.render(g);
-            }
-            /*for (Good pacman : pacmans) {
+
+            if (lives > 0) {
+                player.render(g);
+                for (Enemy enemy : enemys) {
+                    enemy.render(g);
+                }
+                for (Bomb bomb : bombs) {
+                    bomb.render(g);
+                }
+                for (Shot shot : shots) {
+                    shot.render(g);
+                }
+                /*for (Good pacman : pacmans) {
                 pacman.render(g);
             }*/
-            g.setColor(Color.white);
-            g.drawString("Score: " + Integer.toString(score), getWidth() - 80,
-                    20); //Pinta score
-            g.drawString("Lives: " + Integer.toString(lives), getWidth() - 80,
-                    45);//Pinta lives
-            g.setColor(Color.green);
-            g.drawLine(0, 290, getWidth(), 290);
+                g.setColor(Color.white);
+                g.drawString("Lives: " + Integer.toString(lives), getWidth() - 80,
+                        45);//Pinta lives
+                g.setColor(Color.green);
+                g.drawLine(0, 290, getWidth(), 290);
+            } else {
+                g.drawImage(Assets.gameOver, 0, 0, width, height, null);
+            }
 
             bs.show();
             g.dispose();
@@ -220,7 +217,8 @@ public class Game implements Runnable {
     }
 
     public void bomb() { //Bombas de los enemigos
-        //Dos bombas al mismo tiempo
+        if(!pause){
+                //Dos bombas al mismo tiempo
         //Dos numeros random del 1 al 24
         int rand = (int) (Math.random() * 23 + 1);
         int rand2 = (int) (Math.random() * 23 + 1);
@@ -234,8 +232,9 @@ public class Game implements Runnable {
         Bomb bomb2 = new Bomb(enemy2.getX(), enemy2.getY(), 1, 3, 5, this);
 
         //Se añaden dos bombas
-        bombs.add(bomb);
+        bombs.addLast(bomb);
         bombs.addLast(bomb2);
+        }
     }
 
     public void shoot() {//Disparo del player
@@ -279,19 +278,20 @@ public class Game implements Runnable {
 
                 for (Bomb bomb : bombs) {
                     bomb.tick();
-                    if (player.colission(bomb)&&bomb.isVisible()) {
+                    if (player.colission(bomb) && bomb.isVisible()) {
                         bomb.die();
+                        lives--;
                     }
                 }
 
                 for (Shot shot : shots) {
-                for (Enemy enemy : enemys) {
-                   if(shot.colission(enemy)&&shot.isVisible()&&enemy.isVisible()){
-                       //Si estan visibles siguen en el juego
-                       enemy.die();
-                       shot.die();
-                   }
-                }
+                    for (Enemy enemy : enemys) {
+                        if (shot.colission(enemy) && shot.isVisible() && enemy.isVisible()) {
+                            //Si estan visibles siguen en el juego
+                            enemy.die();
+                            shot.die();
+                        }
+                    }
                     shot.tick();
                 }
             }
