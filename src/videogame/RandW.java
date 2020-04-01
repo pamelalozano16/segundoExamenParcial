@@ -28,17 +28,20 @@ public class RandW {
     -vidas
     -score
     -player x/y
-    -tamaño Malos
+    -direccion de los enemigos
     -enemigos x/y
-    -tamaño Buenos
-    -buenos x/y
+    -si ese enemigo esta vivo
      */
     public void Save(String fileName) {
         try {
             String info = ""; //Aqui se va guardando la informacion
             PrintWriter writer = new PrintWriter(new FileWriter(fileName));
+            //Direction de un enemy de la lista
+            int directionEnemys = g.enemys.get(0).getDirection();
+            
             info += ("" + g.lives + "/" + 0 + "/" + g.player.getX() + "/" + g.player.getY());
-            info += ("/" + g.tamMalos);
+            info += ("/" + directionEnemys);
+            
             for (Enemy enemy : g.enemys) {
                 int visible=0;
                 if(enemy.isVisible()){
@@ -61,7 +64,8 @@ public class RandW {
     public void Load(String strFileName) {
         try {
             int j, i;
-
+            int direction;
+            
             FileReader file = new FileReader(strFileName);
             BufferedReader reader = new BufferedReader(file);
             String line;
@@ -71,30 +75,20 @@ public class RandW {
             g.lives = Integer.parseInt(datos[0]); //load Vidas
             g.player.setX(Integer.parseInt(datos[2]));//load player x
             g.player.setY(Integer.parseInt(datos[3]));//load player y
-            g.tamMalos = Integer.parseInt(datos[4]);//load tamaño de malos
+            direction = Integer.parseInt(datos[4]);//load direccion
 
             for (i = 5, j = 1; j <= 24; i += 3, j++) { //Enemigos
                 int x = Integer.parseInt(datos[i]);//load enemy x
                 int y = Integer.parseInt(datos[i + 1]);//load enemy y
-                int visible = Integer.parseInt(datos[i + 2]);
-                Enemy enemy = new Enemy(x, y, 1, 15, 15, g);
+                int visible = Integer.parseInt(datos[i + 2]);//Load si es visible
+                Enemy enemy = new Enemy(x, y, direction, 15, 15, g);
                 if(visible==0){
-                enemy.die();
+                enemy.die();//Si no es visible die
                 }
                 g.enemys.add(enemy); //Se agrega a la lista
             }
 
-           /* g.tamBuenos = Integer.parseInt(datos[i]);
-            i++;
-            for (j = 1; j <= g.tamBuenos; i += 2, j++) { //Monedas
-                int x = Integer.parseInt(datos[i]);//load moneda x
-                int y = Integer.parseInt(datos[i + 1]);//load moneda y
-                Good good = new Good(x, y, 1, 35, 50, g);
-                g.pacmans.add(good); //Se agrega a la lista
-            }
-*/
-            System.out.println("Se leyo  vidas = " + g.lives + " tamMalos = "
-                    + g.tamMalos );
+            System.out.println("Se leyo  vidas = " + g.lives );
             reader.close();
         } catch (IOException e) {
             System.out.println("File Not found CALL 911");

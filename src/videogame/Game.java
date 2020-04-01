@@ -97,10 +97,8 @@ public class Game implements Runnable {
         pacmans = new LinkedList<Good>();
         bombs = new LinkedList<Bomb>();
         shots = new LinkedList<Shot>();
-        tamBuenos = (int) (Math.random() * 3 + 8); //b-a+1 NUMERO DE ENEMIGOS
-        tamMalos = (int) (Math.random() * 6 + 10); //NUMERO DE PACMANS
-        System.out.println("Enemys: " + tamMalos);
-        System.out.println("Buenos: " + tamBuenos);
+     //   tamBuenos = (int) (Math.random() * 3 + 8); //b-a+1 NUMERO DE ENEMIGOS
+        tamMalos = 24; //NUMERO DE ENEMIGOS
         player = new Player((getWidth() - 100) / 2, 280, 1, 15, 10, this); //Player posicionen medio
         RW = new RandW(this);//Pasarle el game a read y write
 
@@ -167,7 +165,7 @@ public class Game implements Runnable {
             g = bs.getDrawGraphics();
             g.drawImage(Assets.background, 0, 0, width, height, null);
 
-            if (lives > 0) {
+            if (lives > 0) { //Si el player esta vivo pintar todo
                 player.render(g);
                 for (Enemy enemy : enemys) {
                     enemy.render(g);
@@ -185,9 +183,10 @@ public class Game implements Runnable {
                 g.drawString("Lives: " + Integer.toString(lives), getWidth() - 80,
                         45);//Pinta lives
                 g.setColor(Color.green);
-                g.drawLine(0, 290, getWidth(), 290);
+                g.drawLine(0, 290, getWidth(), 290);//Pinta la linea
             } else {
                 g.drawImage(Assets.gameOver, 0, 0, width, height, null);
+                //Pinta game over
             }
 
             bs.show();
@@ -197,11 +196,9 @@ public class Game implements Runnable {
 
     }
 
-    public void border(int direction) {
-        /*if(direction==1){
-            Enemy enemy=enemys.get(0);
-            enemy.setX(1);
-        }*/
+    public void border(int direction) { 
+    //El enemigo llego al borde cambia de dirección
+
         for (Enemy enemy : enemys) {
             enemy.setY(enemy.getY() + 15);
             //Bajan 15 px
