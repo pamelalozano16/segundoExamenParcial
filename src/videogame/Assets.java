@@ -14,7 +14,9 @@ public class Assets {
 
     public static BufferedImage background; // to store background image
     public static BufferedImage player;
-
+    public static BufferedImage shot;
+    public static BufferedImage bomb;
+    
     public static BufferedImage enemySprites;
     public static BufferedImage enemyLeft[];
 
@@ -41,6 +43,8 @@ public class Assets {
         background = ImageLoader.loadImage("/images/background.jpg");
         player = ImageLoader.loadImage("/images/player.png");
         enemy= ImageLoader.loadImage("/images/alien.png");
+        shot= ImageLoader.loadImage("/images/shot.png");
+        bomb= ImageLoader.loadImage("/images/bomb.png");
        /* playerSprites = ImageLoader.loadImage("/images/player.png");*/
 
         //PLAYER

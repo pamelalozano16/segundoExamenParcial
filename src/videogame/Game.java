@@ -9,6 +9,8 @@ import java.awt.image.BufferStrategy;
 import static java.lang.System.load;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  *
@@ -29,6 +31,7 @@ public class Game implements Runnable {
     private RandW RW;
     public LinkedList<Enemy> enemys; //LISTA = MALOS
     public LinkedList<Good> pacmans;// PACMANS = BUENOS
+    public LinkedList<Bomb> bombs;
     private int contadorPerder;
     public int lives;
     public int score;
@@ -93,6 +96,7 @@ public class Game implements Runnable {
         Assets.init();
         enemys = new LinkedList<Enemy>();
         pacmans = new LinkedList<Good>();
+        bombs = new LinkedList<Bomb>();
         tamBuenos = (int) (Math.random() * 3 + 8); //b-a+1 NUMERO DE ENEMIGOS
         tamMalos = (int) (Math.random() * 6 + 10); //NUMERO DE PACMANS
         System.out.println("Enemys: " + tamMalos);
@@ -119,6 +123,11 @@ public class Game implements Runnable {
 
         display.getJframe().addKeyListener(keyManager);
         System.out.println("Vidas: " + lives);
+        
+        //Timer para que cada 0.6s se disparen dos bombas
+        Timer timer = new Timer();
+        timer.schedule(new BombTask(this), 0, 600);
+    
     }
 
     @Override
@@ -174,6 +183,9 @@ public class Game implements Runnable {
             for (Enemy enemy : enemys) {
                 enemy.render(g);
             }
+            for (Bomb bomb : bombs) {
+                bomb.render(g);
+            }
             /*for (Good pacman : pacmans) {
                 pacman.render(g);
             }*/
@@ -210,6 +222,26 @@ public class Game implements Runnable {
 
         }
     }
+    
+    public void bomb(){
+        //Dos bombas al mismo tiempo
+        //Dos numeros random del 1 al 24
+        int rand = (int) (Math.random() * 23 + 1);
+        int rand2 = (int) (Math.random() * 23 + 1);
+
+      //  Enemigos Random que disparan
+        Enemy enemy = enemys.get(rand);
+        Enemy enemy2 = enemys.get(rand2);
+
+        //Bombas 
+        Bomb bomb = new Bomb(enemy.getX(),enemy.getY(),1, 3,5,this);
+        Bomb bomb2 = new Bomb(enemy2.getX(),enemy2.getY(),1, 3,5,this);
+        
+        //Se añaden dos bombas
+        bombs.add(bomb);
+        bombs.add(bomb2);
+
+    }
 
     public KeyManager getKeyManager() {
         return keyManager;
@@ -227,6 +259,7 @@ public class Game implements Runnable {
                 }*/
 
             if (keyManager.guardar) {
+                this.bomb();
                 System.out.println("guardar");
                 RW.Save("./load.txt");
             }
@@ -268,6 +301,13 @@ public class Game implements Runnable {
                         pacman.setY((int) (Math.random() * getHeight()));
                     }
                 }*/
+            for (Bomb bomb : bombs) {
+                bomb.tick();
+                if (player.colission(bomb)) {
+                    bomb.visible=false;
+                    
+                }
+            }
             }
 
         }

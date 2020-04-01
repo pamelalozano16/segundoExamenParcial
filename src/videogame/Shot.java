@@ -10,21 +10,23 @@ import java.awt.Graphics;
  *
  * @author mac
  */
-public class Enemy extends Item {
+public class Shot extends Item {
 
     private int direction;
     private int width;
     private int height;
     private Game game;
     private int moving;
+    public boolean visible;
    // private Animation animationLeft;
 
-    public Enemy(int x, int y, int direction, int width, int height, Game game) {
+    public Shot(int x, int y, int direction, int width, int height, Game game) {
         super(x, y, width, height);
         this.direction = direction;
         this.width = width;
         this.height = height;
         this.game = game;
+        this.visible=true;
        // this.animationLeft = new Animation(Assets.enemyLeft, 100);
     }
 
@@ -54,38 +56,23 @@ public class Enemy extends Item {
 
     public void tick() {
 
-
-        //this.animationLeft.tick();
-
+        setY(getY()+1);
         
-
-        /* if(this.getY() >0){
-            this.setY(this.getY() -azar);
-        } 
-        else
-        {
-           this.setY(this.getY() + azar);
-        }*/
-        if (this.getX() <= 0) {   //Esquina izquierda
-           // setX(0);
-           //this.direction=1;
-            game.border(1);
+        if(getY()==290){
+            this.die();
         }
-        if (this.getX() >= game.getWidth()-12) {   //Esquina izquierda
-           this.direction=-1;
-            game.border(-1);
-            
-        }
-        
-        setX(getX()+direction);
-
     }
     
+    public void die(){
+        this.visible=false;
+    }
 
     @Override
     public void render(Graphics g) {
         //  g.drawImage(Assets.enemy, getX(), getY(), getWidth(), getHeight(), null);
-        g.drawImage(Assets.enemy, getX(), getY(), getWidth(), getHeight(), null);
+        if(visible){
+         g.drawImage(Assets.shot, getX(), getY(), getWidth(), getHeight(), null);
+        }
     }
 
 }
