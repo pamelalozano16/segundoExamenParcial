@@ -230,13 +230,16 @@ public class Game implements Runnable {
     public void bomb() { //Bombas de los enemigos
         if(!pause){
         
-        //Numero random del 1 al 24
-        int rand = (int) (Math.random() * 23 + 1);
+        //Numero random del 1 al 23
+        int rand = (int) (Math.random() * 22 + 1);
 
         //  Enemigos Random que disparan
         Enemy enemy = enemys.get(rand);
       
-
+        while(!enemy.isVisible()){ //Si ya no es visible que escoja otro
+        rand = (int) (Math.random() * 22 + 1);
+        enemy = enemys.get(rand);
+        }
         //Bombas 
         Bomb bomb = new Bomb(enemy.getX(), enemy.getY(), 1, 3, 5, this);
 
