@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 package videogame;
+
 import java.awt.image.BufferedImage;
 
 /**
@@ -16,7 +17,7 @@ public class Assets {
     public static BufferedImage player;
     public static BufferedImage shot;
     public static BufferedImage bomb;
-    
+
     public static BufferedImage enemySprites;
     public static BufferedImage enemyLeft[];
 
@@ -32,6 +33,7 @@ public class Assets {
 
     public static BufferedImage enemy;
     public static BufferedImage gameOver;
+    public static BufferedImage gameWon;
     public static SoundClip loose;
     public static SoundClip end;
     public static SoundClip win;
@@ -42,15 +44,16 @@ public class Assets {
     public static void init() {
         background = ImageLoader.loadImage("/images/background.jpg");
         player = ImageLoader.loadImage("/images/player.png");
-        enemy= ImageLoader.loadImage("/images/alien.png");
-        shot= ImageLoader.loadImage("/images/shot.png");
-        bomb= ImageLoader.loadImage("/images/bomb.png");
-        gameOver= ImageLoader.loadImage("/images/game-over.png");
-       /* playerSprites = ImageLoader.loadImage("/images/player.png");*/
+        enemy = ImageLoader.loadImage("/images/alien.png");
+        shot = ImageLoader.loadImage("/images/shot.png");
+        bomb = ImageLoader.loadImage("/images/bomb.png");
+        gameOver = ImageLoader.loadImage("/images/game-over.png");
+        gameWon = ImageLoader.loadImage("/images/game-won.png");
+        /* playerSprites = ImageLoader.loadImage("/images/player.png");*/
 
         //PLAYER
         // creating array of images before animations
-       /* SpriteSheet playerSheet = new SpriteSheet(playerSprites);
+        /* SpriteSheet playerSheet = new SpriteSheet(playerSprites);
         playerUp = new BufferedImage[3];
         playerLeft = new BufferedImage[3];
         playerDown = new BufferedImage[3];
@@ -67,7 +70,7 @@ public class Assets {
             playerStanding[i] = playerSheet.crop(i * 42, 204, 42, 50);
         }*/
 
-        /*ENEMY
+ /*ENEMY
         enemySprites = ImageLoader.loadImage("/images/enemy.png");
         SpriteSheet enemySheet = new SpriteSheet(enemySprites);
         enemyLeft = new BufferedImage[2];

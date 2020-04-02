@@ -112,10 +112,11 @@ public class Game implements Runnable {
         display.getJframe().addKeyListener(keyManager);
         System.out.println("Vidas: " + lives);
 
-        //Timer para que cada 0.3s se disparen dos bombas
-        Timer timer = new Timer();
-        timer.schedule(new BombTask(this), 0, 300);
+        //Timer para que cada 0.4s se disparen dos bombas
 
+        Timer timer = new Timer();
+        timer.schedule(new BombTask(this), 0, 400);
+        //Se puede disminuir la dificultad aumentando el 400
     }
 
     @Override
@@ -148,6 +149,14 @@ public class Game implements Runnable {
         }
         stop();
     }
+   private boolean noEnemys(){ //Checa si se acabaron los enemigos cada tick
+        for(Enemy enemy : enemys){
+            if(enemy.isVisible()){
+                return false;
+            }
+        }
+        return true;
+    }
 
     private void render() {
         // get the buffer strategy from the display
@@ -165,7 +174,7 @@ public class Game implements Runnable {
             g = bs.getDrawGraphics();
             g.drawImage(Assets.background, 0, 0, width, height, null);
 
-            if (lives > 0) { //Si el player esta vivo pintar todo
+            if (lives > 0&&!noEnemys()) { //Si el player esta vivo pintar todo
                 player.render(g);
                 for (Enemy enemy : enemys) {
                     enemy.render(g);
@@ -185,7 +194,11 @@ public class Game implements Runnable {
                 g.setColor(Color.green);
                 g.drawLine(0, 290, getWidth(), 290);//Pinta la linea
             } else {
+                if(noEnemys()){
+                 g.drawImage(Assets.gameWon, 0, 0, width, height, null);
+                } else {
                 g.drawImage(Assets.gameOver, 0, 0, width, height, null);
+                }
                 //Pinta game over
             }
 
@@ -195,7 +208,8 @@ public class Game implements Runnable {
         }
 
     }
-
+    
+ 
     public void border(int direction) { 
     //El enemigo llego al borde cambia de dirección
 
@@ -221,31 +235,24 @@ public class Game implements Runnable {
 
         //  Enemigos Random que disparan
         Enemy enemy = enemys.get(rand);
+      
 
         //Bombas 
         Bomb bomb = new Bomb(enemy.getX(), enemy.getY(), 1, 3, 5, this);
 
-        //Se añaden dos bombas
-        bombs.addLast(bomb);
 
+        bombs.add(bomb);
         }
     }
 
     public void shoot() {//Disparo del player
-        //No puede disparar varios a la vez
-        
         Shot last=null;
-        
         if(shots.size()!=0){
-        //Se guarda el shot anterior
         last = shots.get(shots.size()-1);  
         } else{
-        //Si no hay shot anterior se crea el primero
         Shot shot = new Shot(player.getX() + 6, player.getY(), 1, 3, 7, this);
         shots.add(shot); 
         }
-        
-        //Si hay shot anterior y ya no es visible el player puede disparar
         if(last!=null&&!last.isVisible()){
         Shot shot = new Shot(player.getX() + 6, player.getY(), 1, 3, 7, this);
         shots.addLast(shot); 
@@ -257,7 +264,7 @@ public class Game implements Runnable {
     }
 
     private void tick() {
-        if (lives > 0) { //Si se acaba que todo se deje de mover
+        if (lives > 0&& !noEnemys()) { //Si se acaba que todo se deje de mover
             keyManager.tick();
             this.pause = keyManager.pause;
 
