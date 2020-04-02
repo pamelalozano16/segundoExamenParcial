@@ -114,7 +114,7 @@ public class Game implements Runnable {
 
         //Timer para que cada 0.6s se disparen dos bombas
         Timer timer = new Timer();
-        timer.schedule(new BombTask(this), 0, 600);
+        timer.schedule(new BombTask(this), 0, 300);
 
     }
 
@@ -215,34 +215,37 @@ public class Game implements Runnable {
 
     public void bomb() { //Bombas de los enemigos
         if(!pause){
-        //Dos bombas al mismo tiempo
         
-        //Dos numeros random del 1 al 24
+        //Numero random del 1 al 24
         int rand = (int) (Math.random() * 23 + 1);
-     //   int rand2 = (int) (Math.random() * 23 + 1);
 
         //  Enemigos Random que disparan
         Enemy enemy = enemys.get(rand);
-    //    Enemy enemy2 = enemys.get(rand2);
 
         //Bombas 
         Bomb bomb = new Bomb(enemy.getX(), enemy.getY(), 1, 3, 5, this);
-    //    Bomb bomb2 = new Bomb(enemy2.getX(), enemy2.getY(), 1, 3, 5, this);
 
         //Se añaden dos bombas
-        bombs.add(bomb);
-     //   bombs.addLast(bomb2);
+        bombs.addLast(bomb);
+
         }
     }
 
     public void shoot() {//Disparo del player
+        //No puede disparar varios a la vez
+        
         Shot last=null;
+        
         if(shots.size()!=0){
+        //Se guarda el shot anterior
         last = shots.get(shots.size()-1);  
         } else{
+        //Si no hay shot anterior se crea el primero
         Shot shot = new Shot(player.getX() + 6, player.getY(), 1, 3, 7, this);
         shots.add(shot); 
         }
+        
+        //Si hay shot anterior y ya no es visible el player puede disparar
         if(last!=null&&!last.isVisible()){
         Shot shot = new Shot(player.getX() + 6, player.getY(), 1, 3, 7, this);
         shots.addLast(shot); 
