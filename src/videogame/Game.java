@@ -112,7 +112,7 @@ public class Game implements Runnable {
         display.getJframe().addKeyListener(keyManager);
         System.out.println("Vidas: " + lives);
 
-        //Timer para que cada 0.6s se disparen dos bombas
+        //Timer para que cada 0.3s se disparen dos bombas
         Timer timer = new Timer();
         timer.schedule(new BombTask(this), 0, 300);
 
