@@ -23,9 +23,9 @@ public class Assets {
 
     public static BufferedImage goodSprites;
     public static BufferedImage goodRight[];
-    
+
     public static BufferedImage scoreSprites;
-    public static BufferedImage extraScore[];    
+    public static BufferedImage extraScore[];
 
     public static BufferedImage playerSprites; // to store the sprites.
     public static BufferedImage playerStanding[];
@@ -78,7 +78,7 @@ public class Assets {
         for (int i = 0; i < 6; i++) { //6 Animaciones
             goodRight[i] = goodSheet.crop(i * 299, 0, 299, 258);
         }
-        
+
         //MONEDA
         scoreSprites = ImageLoader.loadImage("/images/buenos.png");
         SpriteSheet scoreSheet = new SpriteSheet(scoreSprites);

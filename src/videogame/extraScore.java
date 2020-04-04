@@ -21,7 +21,7 @@ public class extraScore extends Item {
         this.width = width;
         this.height = height;
         this.game = game;
-        this.visible=true;
+        this.visible = true;
         this.animationRight = new Animation(Assets.extraScore, 100);
     }
 
@@ -57,7 +57,6 @@ public class extraScore extends Item {
         this.visible = false;
     }
 
-
     public void tick() {
 
         this.animationRight.tick();
@@ -67,7 +66,7 @@ public class extraScore extends Item {
         if (this.getY() <= game.getWidth()) {
             this.setY(this.getY() + azar);
         }
-     
+
         if (getY() >= 280) {
             this.die();
         }

@@ -32,15 +32,14 @@ public class Game implements Runnable {
     private RandW RW;
     public LinkedList<Enemy> enemys; //LISTA = MALOS
     public LinkedList<Good> corazones;// CORAZONES = VIDA EXTRA
-    public LinkedList<extraScore> extraScore;// CORAZONES = VIDA EXTRA    
+    public LinkedList<extraScore> extraScore;// CORAZONES = VIDA EXTRA
     public LinkedList<Bomb> bombs;
     public LinkedList<Shot> shots;
     private int contadorPerder;
     public int lives;
     public int score;
     private boolean pause;
-    public int tamBuenos;
-    public int tamMalos;
+
 
     public Game(String title, int width, int height) {
         this.title = title;
@@ -95,10 +94,9 @@ public class Game implements Runnable {
         corazones = new LinkedList<Good>();
         bombs = new LinkedList<Bomb>();
         shots = new LinkedList<Shot>();
-        extraScore = new LinkedList<extraScore>();        
+        extraScore = new LinkedList<extraScore>();
         //   tamBuenos = (int) (Math.random() * 3 + 8); //b-a+1 NUMERO DE ENEMIGOS
 
-        tamMalos = 24; //NUMERO DE ENEMIGOS
         player = new Player((getWidth() - 40) / 2, 270, 1, 20, 20, this); //Player posicionen medio
         RW = new RandW(this);//Pasarle el game a read y write
 
@@ -115,7 +113,7 @@ public class Game implements Runnable {
         Timer timer = new Timer();
         timer.schedule(new BombTask(this), 0, 400);
         timer.schedule(new GoodTask(this), 0, 15000);
-        timer.schedule(new ScoreTask(this), 0, 25000);        
+        timer.schedule(new ScoreTask(this), 0, 25000);
         //Se puede disminuir la dificultad aumentando el 400
         Assets.música.setLooping(true);
         Assets.música.play();
@@ -192,18 +190,22 @@ public class Game implements Runnable {
                 }
                 for (extraScore score : extraScore) {
                     score.render(g);
-                }                
+                }
                 g.setColor(Color.white);
                 g.drawString("Score: " + Integer.toString(score), getWidth() - 80,
-                        20); //Pinta score                
+                        20); //Pinta score
                 g.drawString("Lives: " + Integer.toString(lives), getWidth() - 80,
                         45);//Pinta lives
                 g.setColor(Color.green);
                 g.drawLine(0, 290, getWidth(), 290);//Pinta la linea
             } else {
                 if (noEnemys()) {
+                    //Si se acabaron los enemigos gana
+                    
                     g.drawImage(Assets.gameWon, 0, 0, width, height, null);
                 } else {
+                    
+                    //Si se le acaban las vidas pierde
                     g.drawImage(Assets.gameOver, 0, 0, width, height, null);
                 }
                 //Pinta game over
@@ -246,7 +248,7 @@ public class Game implements Runnable {
                 rand = (int) (Math.random() * 22 + 1);
                 enemy = enemys.get(rand);
             }
-            //Bombas 
+            //Bombas
             Bomb bomb = new Bomb(enemy.getX(), enemy.getY(), 1, 3, 5, this);
 
             bombs.add(bomb);
@@ -275,17 +277,17 @@ public class Game implements Runnable {
 
             //Numero random del 1 al 3
             int rand = (int) (Math.random() * 5 + 1);
-            //Vidas 
+            //Vidas
             Good good = new Good((int) (Math.random() * getWidth() - 10), 0 - (int) (Math.random() + 10), 1, 10, 10, this);
             corazones.add(good);
         }
     }
-     public void score() { //Score
+     public void score() { //Score extra
         if (!pause) {
             System.out.println("score");
             //Numero random del 1 al 3
             int rand = (int) (Math.random() * 5 + 1);
-            //Vidas 
+            //Score extra
            extraScore score= new extraScore((int) (Math.random() * getWidth() - 10), 0 - (int) (Math.random() + 10), 1, 10, 10, this);
             extraScore.add(score);
         }
@@ -366,10 +368,11 @@ public class Game implements Runnable {
                         //Se suma Score
                         this.score+= 5;
                     }
-                }    
+                }
             }
 
         } else{
+            //Si se acaba el juego se acaba la musica
           Assets.musicDie();
         }
     }
