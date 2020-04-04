@@ -1,4 +1,9 @@
+/*
+ * Pamela Lozano A01176970
+ * Javier Sanchez A00517066
+ */
 package videogame;
+
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
@@ -37,8 +42,8 @@ public class KeyManager implements KeyListener {
     public void releasePause() { //Pausa no tiene release, se renuda cuando le vuelve a dar click
         keys[80] = false;
     }
-    
-   public void releaseSpace() { //Pausa no tiene release, se renuda cuando le vuelve a dar click
+
+    public void releaseSpace() { //Pausa no tiene release, se renuda cuando le vuelve a dar click
         keys[KeyEvent.VK_SPACE] = false;
     }
 

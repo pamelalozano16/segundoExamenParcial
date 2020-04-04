@@ -1,9 +1,9 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Pamela Lozano A01176970
+ * Javier Sanchez A00517066
  */
 package videogame;
+
 import java.awt.image.BufferedImage;
 
 /**
@@ -15,7 +15,7 @@ public class SpriteSheet {
     private BufferedImage sheet;
 
     /**
-     * Create a new spritesheet.
+     * Create a new sprite sheet.
      *
      * @param sheet the <code>image</code> with the sprites.
      */
@@ -24,7 +24,7 @@ public class SpriteSheet {
     }
 
     /**
-     * Crop a sprite from the spritesheet.
+     * Crop a sprite from the sprite sheet.
      *
      * @param x an <code>int</code> value with the x coordinate.
      * @param y an <code>int</code> value with the y coordinate.

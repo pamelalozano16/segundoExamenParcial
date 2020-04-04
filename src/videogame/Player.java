@@ -1,9 +1,9 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Pamela Lozano A01176970
+ * Javier Sanchez A00517066
  */
 package videogame;
+
 import java.awt.Graphics;
 
 /**
@@ -27,10 +27,6 @@ public class Player extends Item {
         this.width = width;
         this.height = height;
         this.game = game;
-        this.animationUp = new Animation(Assets.playerUp, 100);
-        this.animationLeft = new Animation(Assets.playerLeft, 100);
-        this.animationDown = new Animation(Assets.playerDown, 100);
-        this.animationRight = new Animation(Assets.playerRight, 100);
         this.animationStanding = new Animation(Assets.playerStanding, 100);
         this.animation = "standing"; //Empieza standing
     }
@@ -45,22 +41,10 @@ public class Player extends Item {
 
     @Override
     public void tick() {
-        // updating animation.
-        /*if (animation == "right") {
-            this.animationRight.tick();
-        }
-        if (animation == "left") {
-            this.animationLeft.tick();
-        }
-        if (animation == "up") {
-            this.animationUp.tick();
-        }
-        if (animation == "down") {
-            this.animationDown.tick();
-        }
+
         if (animation == "standing") {
             this.animationStanding.tick();
-        }*/
+        }
         // moving player depending on flags
         /*if (game.getKeyManager().up) {
             setY(getY() - 1);
@@ -69,7 +53,7 @@ public class Player extends Item {
             setY(getY() + 1);
             animation = "down";
         } */
-        if(game.getKeyManager().space){
+        if (game.getKeyManager().space) {
             game.shoot();
             game.getKeyManager().releaseSpace();
         }
@@ -97,22 +81,7 @@ public class Player extends Item {
 
     @Override
     public void render(Graphics g) {
-       /* if (animation == "right") {
-            g.drawImage(animationRight.getCurrentFrame(), getX(), getY(), getWidth(), getHeight(), null);
-        }
-        if (animation == "left") {
-            g.drawImage(animationLeft.getCurrentFrame(), getX(), getY(), getWidth(), getHeight(), null);
-        }
-        if (animation == "up") {
-            g.drawImage(animationUp.getCurrentFrame(), getX(), getY(), getWidth(), getHeight(), null);
-        }
-        if (animation == "down") {
-            g.drawImage(animationDown.getCurrentFrame(), getX(), getY(), getWidth(), getHeight(), null);
-        }
-        if (animation == "standing") {
             g.drawImage(animationStanding.getCurrentFrame(), getX(), getY(), getWidth(), getHeight(), null);
-        }*/
-        g.drawImage(Assets.player, getX(), getY(), getWidth(), getHeight(), null);
-
+           
     }
 }

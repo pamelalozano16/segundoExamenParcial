@@ -1,9 +1,9 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Pamela Lozano A01176970
+ * Javier Sanchez A00517066
  */
 package videogame;
+
 import java.awt.image.BufferedImage;
 
 /**
@@ -35,8 +35,7 @@ public class Animation {
     /**
      * Getting the current frame to paint.
      *
-     * @return the <code>BufferedImage</code> to the corresponding frame to
-     * paint.
+     * @return the <code>BufferedImage</code> to the corresponding frame to paint.
      */
     public BufferedImage getCurrentFrame() {
         return frames[index];

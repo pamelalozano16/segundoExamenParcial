@@ -1,4 +1,9 @@
+/*
+ * Pamela Lozano A01176970
+ * Javier Sanchez A00517066
+ */
 package videogame;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -38,17 +43,17 @@ public class RandW {
             PrintWriter writer = new PrintWriter(new FileWriter(fileName));
             //Direction de un enemy de la lista
             int directionEnemys = g.enemys.get(0).getDirection();
-            
+
             info += ("" + g.lives + "/" + g.score + "/" + g.player.getX() + "/" + g.player.getY());
             info += ("/" + directionEnemys);
-            
+
             for (Enemy enemy : g.enemys) {
-                int visible=0;
-                if(enemy.isVisible()){
-                    visible=1;
+                int visible = 0;
+                if (enemy.isVisible()) {
+                    visible = 1;
                 }
                 info += ("/" + enemy.getX() + "/" + enemy.getY());
-                info += ("/"+visible);
+                info += ("/" + visible);
             }
             /*info += ("/" + g.tamBuenos);
             for (Good good : g.pacmans) {
@@ -65,7 +70,7 @@ public class RandW {
         try {
             int j, i;
             int direction;
-            
+
             FileReader file = new FileReader(strFileName);
             BufferedReader reader = new BufferedReader(file);
             String line;
@@ -83,13 +88,13 @@ public class RandW {
                 int y = Integer.parseInt(datos[i + 1]);//load enemy y
                 int visible = Integer.parseInt(datos[i + 2]);//Load si es visible
                 Enemy enemy = new Enemy(x, y, direction, 15, 15, g);
-                if(visible==0){
-                enemy.die();//Si no es visible die
+                if (visible == 0) {
+                    enemy.die();//Si no es visible die
                 }
                 g.enemys.add(enemy); //Se agrega a la lista
             }
 
-            System.out.println("Se leyo  vidas = " + g.lives );
+            System.out.println("Se leyo  vidas = " + g.lives);
             reader.close();
         } catch (IOException e) {
             System.out.println("File Not found CALL 911");

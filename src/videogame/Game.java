@@ -31,7 +31,8 @@ public class Game implements Runnable {
     private KeyManager keyManager;
     private RandW RW;
     public LinkedList<Enemy> enemys; //LISTA = MALOS
-    public LinkedList<Good> pacmans;// PACMANS = BUENOS
+    public LinkedList<Good> corazones;// CORAZONES = VIDA EXTRA
+    public LinkedList<extraScore> extraScore;// CORAZONES = VIDA EXTRA    
     public LinkedList<Bomb> bombs;
     public LinkedList<Shot> shots;
     private int contadorPerder;
@@ -50,7 +51,7 @@ public class Game implements Runnable {
         keyManager = new KeyManager();
         contadorPerder = 0;
         lives = 3;
-        score=0;
+        score = 0;
     }
 
     /**
@@ -84,7 +85,6 @@ public class Game implements Runnable {
         Assets.win.play();
     }
 
-
     /**
      * initializing the display window of the game
      */
@@ -92,31 +92,33 @@ public class Game implements Runnable {
         display = new Display(title, getWidth(), getHeight());
         Assets.init();
         enemys = new LinkedList<Enemy>();
-        pacmans = new LinkedList<Good>();
+        corazones = new LinkedList<Good>();
         bombs = new LinkedList<Bomb>();
         shots = new LinkedList<Shot>();
-     //   tamBuenos = (int) (Math.random() * 3 + 8); //b-a+1 NUMERO DE ENEMIGOS
-     
+        extraScore = new LinkedList<extraScore>();        
+        //   tamBuenos = (int) (Math.random() * 3 + 8); //b-a+1 NUMERO DE ENEMIGOS
+
         tamMalos = 24; //NUMERO DE ENEMIGOS
-        player = new Player((getWidth() - 100) / 2, 280, 1, 15, 10, this); //Player posicionen medio
+        player = new Player((getWidth() - 40) / 2, 270, 1, 20, 20, this); //Player posicionen medio
         RW = new RandW(this);//Pasarle el game a read y write
 
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 6; j++) {
                 //Se agregan los enemigos con las coordenadas de un cuadro 6x4
-                Enemy alien = new Enemy(150 + 18 * j, 5 + 18 * i, 1, 15, 15, this);
+                Enemy alien = new Enemy(150 + 18 * j, 5 + 18 * i,1, 20, 20, this);
                 enemys.add(alien);
             }
         }
-
         display.getJframe().addKeyListener(keyManager);
         System.out.println("Vidas: " + lives);
-
         //Timer para que cada 0.4s se disparen dos bombas
-
         Timer timer = new Timer();
         timer.schedule(new BombTask(this), 0, 400);
+        timer.schedule(new GoodTask(this), 0, 15000);
+        timer.schedule(new ScoreTask(this), 0, 25000);        
         //Se puede disminuir la dificultad aumentando el 400
+        Assets.música.setLooping(true);
+        Assets.música.play();
     }
 
     @Override
@@ -149,9 +151,10 @@ public class Game implements Runnable {
         }
         stop();
     }
-   private boolean noEnemys(){ //Checa si se acabaron los enemigos cada tick
-        for(Enemy enemy : enemys){
-            if(enemy.isVisible()){
+
+    private boolean noEnemys() { //Checa si se acabaron los enemigos cada tick
+        for (Enemy enemy : enemys) {
+            if (enemy.isVisible()) {
                 return false;
             }
         }
@@ -173,8 +176,7 @@ public class Game implements Runnable {
             //Que se pinte el game over
             g = bs.getDrawGraphics();
             g.drawImage(Assets.background, 0, 0, width, height, null);
-
-            if (lives > 0&&!noEnemys()) { //Si el player esta vivo pintar todo
+            if (lives > 0 && !noEnemys()) { //Si el player esta vivo pintar todo
                 player.render(g);
                 for (Enemy enemy : enemys) {
                     enemy.render(g);
@@ -185,19 +187,24 @@ public class Game implements Runnable {
                 for (Shot shot : shots) {
                     shot.render(g);
                 }
-
+                for (Good good : corazones) {
+                    good.render(g);
+                }
+                for (extraScore score : extraScore) {
+                    score.render(g);
+                }                
                 g.setColor(Color.white);
                 g.drawString("Score: " + Integer.toString(score), getWidth() - 80,
-                    20); //Pinta score                
+                        20); //Pinta score                
                 g.drawString("Lives: " + Integer.toString(lives), getWidth() - 80,
                         45);//Pinta lives
                 g.setColor(Color.green);
                 g.drawLine(0, 290, getWidth(), 290);//Pinta la linea
             } else {
-                if(noEnemys()){
-                 g.drawImage(Assets.gameWon, 0, 0, width, height, null);
+                if (noEnemys()) {
+                    g.drawImage(Assets.gameWon, 0, 0, width, height, null);
                 } else {
-                g.drawImage(Assets.gameOver, 0, 0, width, height, null);
+                    g.drawImage(Assets.gameOver, 0, 0, width, height, null);
                 }
                 //Pinta game over
             }
@@ -208,10 +215,9 @@ public class Game implements Runnable {
         }
 
     }
-    
- 
-    public void border(int direction) { 
-    //El enemigo llego al borde cambia de dirección
+
+    public void border(int direction) {
+        //El enemigo llego al borde cambia de dirección
 
         for (Enemy enemy : enemys) {
             enemy.setY(enemy.getY() + 15);
@@ -228,37 +234,60 @@ public class Game implements Runnable {
     }
 
     public void bomb() { //Bombas de los enemigos
-        if(!pause){
-        
-        //Numero random del 1 al 23
-        int rand = (int) (Math.random() * 22 + 1);
+        if (!pause) {
 
-        //  Enemigos Random que disparan
-        Enemy enemy = enemys.get(rand);
-      
-        while(!enemy.isVisible()){ //Si ya no es visible que escoja otro
-        rand = (int) (Math.random() * 22 + 1);
-        enemy = enemys.get(rand);
-        }
-        //Bombas 
-        Bomb bomb = new Bomb(enemy.getX(), enemy.getY(), 1, 3, 5, this);
+            //Numero random del 1 al 23
+            int rand = (int) (Math.random() * 22 + 1);
 
+            //  Enemigos Random que disparan
+            Enemy enemy = enemys.get(rand);
 
-        bombs.add(bomb);
+            while (!enemy.isVisible()) { //Si ya no es visible que escoja otro
+                rand = (int) (Math.random() * 22 + 1);
+                enemy = enemys.get(rand);
+            }
+            //Bombas 
+            Bomb bomb = new Bomb(enemy.getX(), enemy.getY(), 1, 3, 5, this);
+
+            bombs.add(bomb);
         }
     }
 
     public void shoot() {//Disparo del player
-        Shot last=null;
-        if(shots.size()!=0){
-        last = shots.get(shots.size()-1);  
-        } else{
-        Shot shot = new Shot(player.getX() + 6, player.getY(), 1, 3, 7, this);
-        shots.add(shot); 
+        Assets.disparo.play();
+        Shot last = null;
+        //Para que no dispare si ya hay un disparo en el juego
+        //Es uno a la vez como space invaders
+        if (shots.size() != 0) {
+            last = shots.get(shots.size() - 1);
+        } else {
+            Shot shot = new Shot(player.getX()+10, player.getY(), 1, 3, 7, this);
+            shots.add(shot);
         }
-        if(last!=null&&!last.isVisible()){
-        Shot shot = new Shot(player.getX() + 6, player.getY(), 1, 3, 7, this);
-        shots.addLast(shot); 
+        if (last != null && !last.isVisible()) {
+            Shot shot = new Shot(player.getX()+10, player.getY(), 1, 3, 7, this);
+            shots.addLast(shot);
+        }
+    }
+
+    public void good() { //Vidas
+        if (!pause) {
+
+            //Numero random del 1 al 3
+            int rand = (int) (Math.random() * 5 + 1);
+            //Vidas 
+            Good good = new Good((int) (Math.random() * getWidth() - 10), 0 - (int) (Math.random() + 10), 1, 10, 10, this);
+            corazones.add(good);
+        }
+    }
+     public void score() { //Score
+        if (!pause) {
+            System.out.println("score");
+            //Numero random del 1 al 3
+            int rand = (int) (Math.random() * 5 + 1);
+            //Vidas 
+           extraScore score= new extraScore((int) (Math.random() * getWidth() - 10), 0 - (int) (Math.random() + 10), 1, 10, 10, this);
+            extraScore.add(score);
         }
     }
 
@@ -267,7 +296,7 @@ public class Game implements Runnable {
     }
 
     private void tick() {
-        if (lives > 0&& !noEnemys()) { //Si se acaba que todo se deje de mover
+        if (lives > 0 && !noEnemys()) { //Si se acaba que todo se deje de mover
             keyManager.tick();
             this.pause = keyManager.pause;
 
@@ -278,7 +307,7 @@ public class Game implements Runnable {
             if (keyManager.load) {
                 System.out.println("load");
                 enemys.clear(); //Resetear lista de malos
-                pacmans.clear(); //Resetear lista de buenos
+                corazones.clear(); //Resetear lista de buenos
                 RW.Load("./load.txt");
             }
 
@@ -287,6 +316,12 @@ public class Game implements Runnable {
 
                 for (Enemy enemy : enemys) {
                     enemy.tick();
+                    if (player.colission(enemy) && enemy.isVisible()) {
+                        //Si un enemigo choca con el player
+                        //Es por que ya estan abajo
+                        //Se acaba el juego
+                        lives=0;
+                    }
                 }
 
                 for (Bomb bomb : bombs) {
@@ -309,18 +344,38 @@ public class Game implements Runnable {
                             enemy.die();
                             shot.die();
                             //Se suma score
-                            score+=5;
+                            score += 5;
                         }
                     }
                     shot.tick();
                 }
+
+                for (Good good : corazones) {
+                    good.tick();
+                    //Checa si la nave tocó la vida y si la vida está visible.
+                    if (player.colission(good) && good.isVisible()) {
+                        good.die();
+                        //Se suma una vida.
+                        lives += 1;
+                    }
+                }
+                for (extraScore score : extraScore) {
+                    score.tick();
+                      if (player.colission(score) && score.isVisible()) {
+                        score.die();
+                        //Se suma Score
+                        this.score+= 5;
+                    }
+                }    
             }
 
+        } else{
+          Assets.musicDie();
         }
     }
 
     /**
-     * setting the thead for the game
+     * setting the thread for the game
      */
     public synchronized void start() {
         if (!running) {
@@ -343,5 +398,4 @@ public class Game implements Runnable {
             }
         }
     }
-
 }

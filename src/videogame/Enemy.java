@@ -1,7 +1,6 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Pamela Lozano A01176970
+ * Javier Sanchez A00517066
  */
 package videogame;
 
@@ -19,7 +18,7 @@ public class Enemy extends Item {
     private Game game;
     private int moving;
     private boolean visible;
-    // private Animation animationLeft;
+    private Animation animationStanding;
 
     public Enemy(int x, int y, int direction, int width, int height, Game game) {
         super(x, y, width, height);
@@ -28,7 +27,7 @@ public class Enemy extends Item {
         this.height = height;
         this.game = game;
         this.visible = true;
-        // this.animationLeft = new Animation(Assets.enemyLeft, 100);
+        this.animationStanding = new Animation(Assets.enemyStanding, 100);
     }
 
     public int getDirection() {
@@ -56,7 +55,7 @@ public class Enemy extends Item {
     }
 
     public void tick() {
-
+        animationStanding.tick();
         if (this.getX() <= 0) {   //Esquina izquierda
             // setX(0);
             //this.direction=1;
@@ -67,14 +66,16 @@ public class Enemy extends Item {
             game.border(-1);
 
         }
-
         setX(getX() + direction);
-
+        if (getY() >= 300) {
+            this.die();
+        }
     }
-    public boolean isVisible(){
+
+    public boolean isVisible() {
         return visible;
     }
-    
+
     public void die() {
         this.visible = false;
     }
@@ -83,7 +84,7 @@ public class Enemy extends Item {
     public void render(Graphics g) {
         //  g.drawImage(Assets.enemy, getX(), getY(), getWidth(), getHeight(), null);
         if (visible) {
-            g.drawImage(Assets.enemy, getX(), getY(), getWidth(), getHeight(), null);
+            g.drawImage(animationStanding.getCurrentFrame(), getX(), getY(), getWidth(), getHeight(), null);
         }
     }
 

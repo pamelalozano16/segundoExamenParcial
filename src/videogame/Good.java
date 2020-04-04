@@ -1,4 +1,9 @@
+/*
+ * Pamela Lozano A01176970
+ * Javier Sanchez A00517066
+ */
 package videogame;
+
 import java.awt.Graphics;
 
 /**
@@ -12,6 +17,7 @@ public class Good extends Item {
     private int height;
     private Game game;
     private Animation animationRight;
+    private boolean visible;
 
     public Good(int x, int y, int direction, int width, int height, Game game) {
         super(x, y, width, height);
@@ -20,6 +26,7 @@ public class Good extends Item {
         this.height = height;
         this.game = game;
         this.animationRight = new Animation(Assets.goodRight, 100);
+        this.visible = true;
     }
 
     public int getDirection() {
@@ -50,10 +57,10 @@ public class Good extends Item {
 
         this.animationRight.tick();
 
-        int azar = (int) (Math.random() * 3 + 1);
+        int azar = (int) (Math.random() * 2 + 1);
 
-        if (this.getX() <= game.getWidth()) {
-            this.setX(this.getX() + azar);
+        if (this.getY() <= game.getWidth()) {
+            this.setY(this.getY() + azar);
         }
         /*  else
         {
@@ -67,15 +74,23 @@ public class Good extends Item {
         {
            this.setY(this.getY() + azar);
         }*/
-        if (getX() >= game.getWidth()) { //Esquina derecha
-            setX(0);
+        if (getY() >= 280) {
+            this.die();
         }
+    }
 
+    public boolean isVisible() {
+        return visible;
+    }
+
+    public void die() {
+        this.visible = false;
     }
 
     @Override
     public void render(Graphics g) {
-        g.drawImage(animationRight.getCurrentFrame(), getX(), getY(), getWidth(), getHeight(), null);
+        if (visible) {
+            g.drawImage(animationRight.getCurrentFrame(), getX(), getY(), getWidth(), getHeight(), null);
+        }
     }
-
 }

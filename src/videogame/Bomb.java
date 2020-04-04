@@ -1,9 +1,9 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Pamela Lozano A01176970
+ * Javier Sanchez A00517066
  */
 package videogame;
+
 import java.awt.Graphics;
 
 /**
@@ -17,7 +17,7 @@ public class Bomb extends Item {
     private int height;
     private Game game;
     private boolean visible;
-   //Cuando choque dejaran de ser visibles
+    //Cuando choque dejaran de ser visibles
 
     public Bomb(int x, int y, int direction, int width, int height, Game game) {
         super(x, y, width, height);
@@ -25,8 +25,8 @@ public class Bomb extends Item {
         this.width = width;
         this.height = height;
         this.game = game;
-        this.visible=true;
-       // this.animationLeft = new Animation(Assets.enemyLeft, 100);
+        this.visible = true;
+        // this.animationLeft = new Animation(Assets.enemyLeft, 100);
     }
 
     public int getDirection() {
@@ -55,26 +55,26 @@ public class Bomb extends Item {
 
     public void tick() {
 
-        setY(getY()+1);
-        
-        if(getY()==285){
+        setY(getY() + 1);
+
+        if (getY() == 285) {
             this.die();
         }
     }
-    
-    public boolean isVisible(){
+
+    public boolean isVisible() {
         return visible;
     }
-    
-    public void die(){
-        this.visible=false;
+
+    public void die() {
+        this.visible = false;
     }
 
     @Override
     public void render(Graphics g) {
         //  g.drawImage(Assets.enemy, getX(), getY(), getWidth(), getHeight(), null);
-        if(visible){
-         g.drawImage(Assets.bomb, getX(), getY(), getWidth(), getHeight(), null);
+        if (visible) {
+            g.drawImage(Assets.bomb, getX(), getY(), getWidth(), getHeight(), null);
         }
     }
 
